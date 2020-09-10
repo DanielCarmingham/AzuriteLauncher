@@ -15,7 +15,7 @@ More info about Azurite can be found at their project page: https://github.com/A
 
 ## Easily run via PowerShell function
 
-To make it even easier to start from PowerShell, you can create a function in my profile like this:
+To make it even easier to start from PowerShell, you can create a function in your profile like this:
 
 `Function startazurite {C:\___path_to_this_project___\Debug\AzureStorageEmulator.exe}`
 
