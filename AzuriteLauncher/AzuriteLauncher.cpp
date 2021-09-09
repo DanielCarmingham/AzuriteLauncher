@@ -1,10 +1,15 @@
+#define WIN32_LEAN_AND_MEAN
 #include <stdio.h>
 #include <shlobj.h>
 #include <process.h>
 #include <windows.h>
+#include <signal.h>
+#include <string>
 
-int main()
+int wmain(int argc, wchar_t *argv[])
 {
+    signal(SIGINT, SIG_IGN);
+
     printf("AzuriteLauncher - Launch Azurite as AzureStorageEmulator.exe so you can debug Azure Functions in Visual Studio\n");
 
     TCHAR my_documents[MAX_PATH];
@@ -20,7 +25,16 @@ int main()
     si.cb = sizeof(si);
     ZeroMemory(&pi, sizeof(pi));
 
-    LPTSTR cmdLine = _wcsdup(L"/C azurite");
+    std::wstring strCmdLine(L"/C azurite");
+
+    int i;
+    for (i = 1; i < argc; i++)
+    {
+        strCmdLine.append(L" ");
+        strCmdLine.append(argv[i]);
+    }
+
+    LPTSTR cmdLine = &strCmdLine[0];
 
     if (!CreateProcess(cmdExe, cmdLine, NULL, NULL, FALSE, 0, NULL, my_documents, &si, &pi))
     {
@@ -32,6 +46,8 @@ int main()
 
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
+
+    wprintf(L"Exiting AzuriteLauncher...\n");
 
     return 0;
 }
